@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.develazquez.bibliocloud"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.develazquez.bibliocloud"
@@ -62,17 +62,18 @@ dependencies {
     // Hilt e Inyección de dependencias
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.androidx.hilt.navigation.compose) // Usando el catálogo
 
-    // Retrofit y Navegación
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation("androidx.navigation:navigation-compose:2.8.3")
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Retrofit y Redes (LIMPIO y sin duplicados)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+
+    // Navegación e Imágenes
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

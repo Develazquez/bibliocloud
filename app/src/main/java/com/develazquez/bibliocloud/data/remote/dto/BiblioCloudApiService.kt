@@ -6,7 +6,7 @@ import retrofit2.http.*
 
 interface BiblioCloudApiService {
 
-    @POST("auth/login")
+    @POST("usuarios/login")
     suspend fun login(@Body request: LoginRequestDto): Response<LoginResponseDto>
 
     @POST("auth/register")
