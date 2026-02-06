@@ -1,70 +1,35 @@
 package com.develazquez.bibliocloud.presentation.view
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.compose.runtime.*
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-
-sealed class Screen(val route: String) {
-    object Login : Screen("login")
-    object Register : Screen("register")
-    object Catalog : Screen("catalog")
-    object RecursoDetail : Screen("recurso_detail/{recursoId}") {
-        fun createRoute(recursoId: String) = "recurso_detail/$recursoId"
-    }
-    object ConfirmLoan : Screen("confirm_loan/{recursoId}") {
-        fun createRoute(recursoId: String) = "confirm_loan/$recursoId"
-    }
-    object MyLoans : Screen("my_loans")
-}
+import com.develazquez.bibliocloud.presentation.viewmodel.LoginViewModel
+import com.develazquez.bibliocloud.presentation.viewmodel.RegisterViewModel
 
 @Composable
-fun BiblioCloudApp() {
+fun BiblioCloudApp() { // Nombre exacto que pide tu MainActivity
     val navController = rememberNavController()
 
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Login.route
-    ) {
-        composable(Screen.Login.route) {
-            LoginScreen(navController = navController)
-        }
+    NavHost(navController = navController, startDestination = "login") {
 
-        composable(Screen.Register.route) {
-            RegisterScreen(navController = navController)
-        }
-
-        composable(Screen.Catalog.route) {
-            CatalogScreen(navController = navController)
-        }
-
-        composable(
-            route = Screen.RecursoDetail.route,
-            arguments = listOf(navArgument("recursoId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val recursoId = backStackEntry.arguments?.getString("recursoId") ?: ""
-            RecursoDetailScreen(
-                recursoId = recursoId,
-                navController = navController
+        // Ruta para tu Login (Diseño tuyo + Lógica de él)
+        composable("login") {
+            val viewModel: LoginViewModel = hiltViewModel()
+            LoginScreen(
+                viewModel = viewModel,
+                onIrARegistro = { navController.navigate("register") }
             )
         }
 
-        composable(
-            route = Screen.ConfirmLoan.route,
-            arguments = listOf(navArgument("recursoId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val recursoId = backStackEntry.arguments?.getString("recursoId") ?: ""
-            ConfirmLoanScreen(
-                recursoId = recursoId,
-                navController = navController
+        // Ruta para tu Registro (Diseño tuyo + Lógica de él)
+        composable("register") {
+            val viewModel: RegisterViewModel = hiltViewModel()
+            RegisterScreen(
+                viewModel = viewModel,
+                alVolverAlLogin = { navController.popBackStack() }
             )
-        }
-
-        composable(Screen.MyLoans.route) {
-            MyLoansScreen(navController = navController)
         }
     }
 }
