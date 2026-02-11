@@ -1,7 +1,6 @@
 package com.develazquez.bibliocloud.presentation.view
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +11,7 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Register : Screen("register")
     object Catalog : Screen("catalog")
+    object Profile : Screen("profile")
     object RecursoDetail : Screen("recurso_detail/{recursoId}") {
         fun createRoute(recursoId: String) = "recurso_detail/$recursoId"
     }
@@ -41,15 +41,22 @@ fun BiblioCloudApp() {
             CatalogScreen(navController = navController)
         }
 
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(
             route = Screen.RecursoDetail.route,
             arguments = listOf(navArgument("recursoId") { type = NavType.StringType })
         ) { backStackEntry ->
             val recursoId = backStackEntry.arguments?.getString("recursoId") ?: ""
-            RecursoDetailScreen(
-                recursoId = recursoId,
-                navController = navController
-            )
+            RecursoDetailScreen(recursoId = recursoId, navController = navController)
         }
 
         composable(
@@ -57,10 +64,7 @@ fun BiblioCloudApp() {
             arguments = listOf(navArgument("recursoId") { type = NavType.StringType })
         ) { backStackEntry ->
             val recursoId = backStackEntry.arguments?.getString("recursoId") ?: ""
-            ConfirmLoanScreen(
-                recursoId = recursoId,
-                navController = navController
-            )
+            ConfirmLoanScreen(recursoId = recursoId, navController = navController)
         }
 
         composable(Screen.MyLoans.route) {

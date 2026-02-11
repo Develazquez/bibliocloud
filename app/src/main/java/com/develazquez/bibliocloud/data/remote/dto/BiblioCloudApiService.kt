@@ -15,6 +15,10 @@ interface BiblioCloudApiService {
     @GET("auth/me")
     suspend fun getCurrentUser(@Header("Authorization") token: String): Response<UsuarioDto>
 
+    // NUEVO: Endpoint para borrar el usuario actual en el backend de Go
+    @DELETE("auth/me")
+    suspend fun deleteUser(@Header("Authorization") token: String): Response<Unit>
+
     @GET("recursos")
     suspend fun getRecursos(@Header("Authorization") token: String): Response<List<RecursoDto>>
 
