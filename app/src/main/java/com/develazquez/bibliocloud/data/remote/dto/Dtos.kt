@@ -5,13 +5,16 @@ import com.develazquez.bibliocloud.data.remote.dto.PrestamoDto
 import com.develazquez.bibliocloud.data.remote.dto.RecursoDto
 import com.develazquez.bibliocloud.data.remote.dto.UsuarioDto
 import com.develazquez.bibliocloud.domain.model.*
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.*
+
+private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+    timeZone = TimeZone.getTimeZone("UTC")
+}
 
 fun UsuarioDto.toDomain(): Usuario {
     return Usuario(
-        // Si el id del DTO es null, le asignamos un String vacío ""
-        // Esto evita el error "parameter id is null"
-        id = this.id ?: "",
+        id = this.id.toString(),
         nombre = this.nombre ?: "Sin nombre",
         email = this.email ?: "",
         estado = when ((this.estado ?: "").uppercase()) {
@@ -22,9 +25,10 @@ fun UsuarioDto.toDomain(): Usuario {
         cantidadPrestamosActuales = this.cantidadPrestamosActuales ?: 0
     )
 }
+
 fun RecursoDto.toDomain(): Recurso {
     return Recurso(
-        id = this.id,
+        id = this.id.toString(),
         titulo = this.titulo,
         categoria = when ((this.categoria ?: "").uppercase()) {
             "LIBRO" -> CategoriaRecurso.LIBRO
@@ -45,12 +49,14 @@ fun RecursoDto.toDomain(): Recurso {
 
 fun PrestamoDto.toDomain(): Prestamo {
     return Prestamo(
-        id = this.id,
-        usuarioId = this.usuarioId,
-        recursoId = this.recursoId,
-        fechaInicio = Date(this.fechaInicio),
-        fechaFinPrevista = Date(this.fechaFinPrevista),
-        fechaDevolucionReal = this.fechaDevolucionReal?.let { Date(it) },
+        id = this.id.toString(),
+        usuarioId = this.usuarioId.toString(),
+        recursoId = this.recursoId.toString(),
+        fechaInicio = try { apiDateFormat.parse(this.fechaInicio) ?: Date() } catch (e: Exception) { Date() },
+        fechaFinPrevista = try { apiDateFormat.parse(this.fechaLimite) ?: Date() } catch (e: Exception) { Date() },
+        fechaDevolucionReal = this.fechaDevolucion?.let {
+            try { apiDateFormat.parse(it) } catch (e: Exception) { null }
+        },
         estado = when ((this.estado ?: "").uppercase()) {
             "ACTIVO" -> EstadoPrestamo.ACTIVO
             "DEVUELTO" -> EstadoPrestamo.DEVUELTO
@@ -62,18 +68,20 @@ fun PrestamoDto.toDomain(): Prestamo {
     )
 }
 
-// Localizado en com.develazquez.bibliocloud.data.remote.mapper
-
 fun LoginResponseDto.toDomain(): LoginResponse {
+    val usuario = this.usuario?.toDomain() ?: Usuario(
+        id = "",
+        nombre = "Usuario",
+        email = "",
+        estado = EstadoUsuario.ACTIVO,
+        cantidadPrestamosActuales = 0
+    )
+    
+    // Si el servidor no devuelve token, generar uno basado en el usuario
+    val token = this.token ?: "token_${usuario.id}_${System.currentTimeMillis()}"
+    
     return LoginResponse(
-        // Si 'token' es null en el DTO, le asignamos "" para que no truene el Dominio
-        token = this.token ?: "",
-        usuario = this.usuario?.toDomain() ?: Usuario(
-            id = "",
-            nombre = "Usuario",
-            email = "",
-            estado = EstadoUsuario.ACTIVO,
-            cantidadPrestamosActuales = 0
-        )
+        token = token,
+        usuario = usuario
     )
 }

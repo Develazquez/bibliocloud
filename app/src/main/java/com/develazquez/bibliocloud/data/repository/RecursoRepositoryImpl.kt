@@ -4,6 +4,7 @@ import com.develazquez.bibliocloud.data.local.TokenManager
 import com.develazquez.bibliocloud.data.remote.BiblioCloudApiService
 import com.develazquez.bibliocloud.data.remote.mapper.toDomain
 import com.develazquez.bibliocloud.domain.model.CategoriaRecurso
+import com.develazquez.bibliocloud.domain.model.EstadoRecurso
 import com.develazquez.bibliocloud.domain.model.Recurso
 import com.develazquez.bibliocloud.domain.repository.RecursoRepository
 import javax.inject.Inject
@@ -34,11 +35,14 @@ class RecursoRepositoryImpl @Inject constructor(
 
     override suspend fun getRecursosDisponibles(): Result<List<Recurso>> {
         return try {
-            val response = apiService.getRecursosDisponibles(getAuthHeader())
+            val response = apiService.getRecursos(getAuthHeader())
 
             if (response.isSuccessful && response.body() != null) {
-                val recursos = response.body()!!.map { it.toDomain() }
-                Result.success(recursos)
+                val todosLosRecursos = response.body()!!.map { it.toDomain() }
+                val disponibles = todosLosRecursos.filter {
+                    it.estado == EstadoRecurso.DISPONIBLE
+                }
+                Result.success(disponibles)
             } else {
                 Result.failure(Exception("Error al obtener recursos disponibles"))
             }
@@ -63,11 +67,15 @@ class RecursoRepositoryImpl @Inject constructor(
 
     override suspend fun buscarRecursos(query: String): Result<List<Recurso>> {
         return try {
-            val response = apiService.buscarRecursos(getAuthHeader(), query)
+            val response = apiService.getRecursos(getAuthHeader())
 
             if (response.isSuccessful && response.body() != null) {
-                val recursos = response.body()!!.map { it.toDomain() }
-                Result.success(recursos)
+                val todosLosRecursos = response.body()!!.map { it.toDomain() }
+                val resultados = todosLosRecursos.filter { recurso ->
+                    recurso.titulo.contains(query, ignoreCase = true) ||
+                            recurso.descripcion?.contains(query, ignoreCase = true) == true
+                }
+                Result.success(resultados)
             } else {
                 Result.failure(Exception("Error al buscar recursos"))
             }
@@ -78,12 +86,14 @@ class RecursoRepositoryImpl @Inject constructor(
 
     override suspend fun getRecursosPorCategoria(categoria: CategoriaRecurso): Result<List<Recurso>> {
         return try {
-            val categoriaStr = categoria.name
-            val response = apiService.getRecursosPorCategoria(getAuthHeader(), categoriaStr)
+            val response = apiService.getRecursos(getAuthHeader())
 
             if (response.isSuccessful && response.body() != null) {
-                val recursos = response.body()!!.map { it.toDomain() }
-                Result.success(recursos)
+                val todosLosRecursos = response.body()!!.map { it.toDomain() }
+                val porCategoria = todosLosRecursos.filter {
+                    it.categoria == categoria
+                }
+                Result.success(porCategoria)
             } else {
                 Result.failure(Exception("Error al obtener recursos por categoría"))
             }

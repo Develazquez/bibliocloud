@@ -6,20 +6,40 @@ import retrofit2.http.*
 
 interface BiblioCloudApiService {
 
+
     @POST("usuarios/login")
     suspend fun login(@Body request: LoginRequestDto): Response<LoginResponseDto>
 
-    @POST("auth/register")
+    @POST("usuarios")
     suspend fun register(@Body request: RegisterRequestDto): Response<LoginResponseDto>
 
-    @GET("auth/me")
-    suspend fun getCurrentUser(@Header("Authorization") token: String): Response<UsuarioDto>
+    @GET("usuarios/{id}")
+    suspend fun getCurrentUser(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<UsuarioDto>
+
+    @GET("usuarios")
+    suspend fun getAllUsers(@Header("Authorization") token: String): Response<List<UsuarioDto>>
+
+    @PUT("usuarios/{id}")
+    suspend fun updateUser(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body usuario: UsuarioDto
+    ): Response<UsuarioDto>
+
+    @DELETE("usuarios/{id}")
+    suspend fun deleteUser(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<Unit>
+
+
+    // ============ RECURSOS ============
 
     @GET("recursos")
     suspend fun getRecursos(@Header("Authorization") token: String): Response<List<RecursoDto>>
-
-    @GET("recursos/disponibles")
-    suspend fun getRecursosDisponibles(@Header("Authorization") token: String): Response<List<RecursoDto>>
 
     @GET("recursos/{id}")
     suspend fun getRecursoById(
@@ -27,17 +47,27 @@ interface BiblioCloudApiService {
         @Path("id") id: String
     ): Response<RecursoDto>
 
-    @GET("recursos/buscar")
-    suspend fun buscarRecursos(
+    @POST("recursos")
+    suspend fun createRecurso(
         @Header("Authorization") token: String,
-        @Query("q") query: String
-    ): Response<List<RecursoDto>>
+        @Body recurso: RecursoDto
+    ): Response<RecursoDto>
 
-    @GET("recursos/categoria/{categoria}")
-    suspend fun getRecursosPorCategoria(
+    @PUT("recursos/{id}")
+    suspend fun updateRecurso(
         @Header("Authorization") token: String,
-        @Path("categoria") categoria: String
-    ): Response<List<RecursoDto>>
+        @Path("id") id: String,
+        @Body recurso: RecursoDto
+    ): Response<RecursoDto>
+
+    @DELETE("recursos/{id}")
+    suspend fun deleteRecurso(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<Unit>
+
+
+    // ============ PRÉSTAMOS ============
 
     @POST("prestamos")
     suspend fun solicitarPrestamo(
@@ -45,17 +75,30 @@ interface BiblioCloudApiService {
         @Body request: SolicitarPrestamoRequestDto
     ): Response<PrestamoDto>
 
-    @PUT("prestamos/{id}/devolver")
-    suspend fun devolverPrestamo(
+    @GET("prestamos")
+    suspend fun getAllPrestamos(@Header("Authorization") token: String): Response<List<PrestamoDto>>
+
+    @GET("prestamos/{id}")
+    suspend fun getPrestamoById(
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): Response<PrestamoDto>
 
-    @GET("prestamos/mis-prestamos")
-    suspend fun getMisPrestamos(@Header("Authorization") token: String): Response<List<PrestamoDto>>
+    @PUT("prestamos/{id}")
+    suspend fun updatePrestamo(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body prestamo: PrestamoDto
+    ): Response<PrestamoDto>
 
-    @GET("prestamos/{id}")
-    suspend fun getPrestamoById(
+    @DELETE("prestamos/{id}")
+    suspend fun deletePrestamo(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<Unit>
+
+    @POST("prestamos/{id}/devolver")
+    suspend fun devolverPrestamo(
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): Response<PrestamoDto>
