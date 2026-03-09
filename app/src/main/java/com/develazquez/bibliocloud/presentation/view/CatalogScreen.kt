@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,7 +34,16 @@ fun CatalogScreen(
                 title = { Text("Catálogo de Recursos") },
                 actions = {
                     IconButton(onClick = { navController.navigate(Screen.MyLoans.route) }) {
-                        Icon(Icons.Default.Person, contentDescription = "Mis Préstamos")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.List,
+                            contentDescription = "Mis Préstamos"
+                        )
+                    }
+                    IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Mi Perfil"
+                        )
                     }
                 }
             )
@@ -41,30 +51,18 @@ fun CatalogScreen(
     ) { paddingValues ->
         when (val state = recursoState) {
             is RecursoState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
             }
             is RecursoState.Success -> {
                 if (state.recursos.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
                         Text("No hay recursos disponibles")
                     }
                 } else {
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
+                        modifier = Modifier.fillMaxSize().padding(paddingValues),
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -72,9 +70,7 @@ fun CatalogScreen(
                             RecursoCard(
                                 recurso = recurso,
                                 onClick = {
-                                    navController.navigate(
-                                        Screen.RecursoDetail.createRoute(recurso.id)
-                                    )
+                                    navController.navigate(Screen.RecursoDetail.createRoute(recurso.id))
                                 }
                             )
                         }
@@ -82,21 +78,11 @@ fun CatalogScreen(
                 }
             }
             is RecursoState.Error -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = state.message,
-                            color = MaterialTheme.colorScheme.error
-                        )
+                        Text(text = state.message, color = MaterialTheme.colorScheme.error)
                         Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { viewModel.refresh() }) {
-                            Text("Reintentar")
-                        }
+                        Button(onClick = { viewModel.refresh() }) { Text("Reintentar") }
                     }
                 }
             }
@@ -106,56 +92,26 @@ fun CatalogScreen(
 }
 
 @Composable
-fun RecursoCard(
-    recurso: Recurso,
-    onClick: () -> Unit
-) {
+fun RecursoCard(recurso: Recurso, onClick: () -> Unit) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             if (recurso.imagenUrl != null) {
                 AsyncImage(
                     model = recurso.imagenUrl,
                     contentDescription = recurso.titulo,
-                    modifier = Modifier
-                        .size(80.dp)
-                        .padding(end = 16.dp),
+                    modifier = Modifier.size(80.dp).padding(end = 16.dp),
                     contentScale = ContentScale.Crop
                 )
             }
-
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = recurso.titulo,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Text(text = recurso.titulo, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = recurso.categoria.name,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-                if (recurso.descripcion != null) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = recurso.descripcion,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 2
-                    )
-                }
+                Text(text = recurso.categoria.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
             }
-
-            AssistChip(
-                onClick = {},
-                label = { Text(recurso.estado.name) }
-            )
+            AssistChip(onClick = {}, label = { Text(recurso.estado.name) })
         }
     }
 }

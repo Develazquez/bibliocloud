@@ -113,4 +113,33 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    // NUEVO: Implementación para borrar cuenta en el servidor Go y limpiar datos locales
+    override suspend fun deleteAccount(): Result<Unit> {
+        return try {
+            val token = tokenManager.getToken()
+            val userId = tokenManager.getUserId()
+
+            if (token == null) {
+                return Result.failure(Exception("No hay una sesión activa"))
+            }
+
+            val response = apiService.deleteUser("Bearer $token", userId)
+
+            if (response.isSuccessful) {
+                // Si el servidor Go borra el usuario con éxito, limpiamos el token local
+                tokenManager.clearToken()
+                Result.success(Unit)
+            } else {
+                val errorMessage = when (response.code()) {
+                    401 -> "Sesión expirada o no autorizada"
+                    403 -> "No tienes permisos para realizar esta acción"
+                    else -> "Error al eliminar cuenta: ${response.message()}"
+                }
+                Result.failure(Exception(errorMessage))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de red al intentar eliminar cuenta: ${e.message}"))
+        }
+    }
+
 }

@@ -29,13 +29,13 @@ interface BiblioCloudApiService {
         @Body usuario: UsuarioDto
     ): Response<UsuarioDto>
 
+
+
     @DELETE("usuarios/{id}")
     suspend fun deleteUser(
         @Header("Authorization") token: String,
-        @Path("id") id: String
+        @Path("id") id: String?
     ): Response<Unit>
-
-
     // ============ RECURSOS ============
 
     @GET("recursos")
