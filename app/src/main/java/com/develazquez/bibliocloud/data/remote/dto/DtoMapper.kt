@@ -3,11 +3,11 @@ package com.develazquez.bibliocloud.data.remote.dto
 import com.google.gson.annotations.SerializedName
 
 data class UsuarioDto(
-    @SerializedName("ID") val id: Int,
-    @SerializedName("Nombre") val nombre: String,
-    @SerializedName("Email") val email: String,
-    @SerializedName("Estado") val estado: String?,
-    @SerializedName("CantidadPrestamosActuales") val cantidadPrestamosActuales: Int
+    @SerializedName("id") val id: Int,
+    @SerializedName("nombre") val nombre: String?,
+    @SerializedName("email") val email: String?,
+    @SerializedName("estado") val estado: String?,
+    @SerializedName("cantidadPrestamosActuales") val cantidadPrestamosActuales: Int?
 )
 
 data class RecursoDto(
@@ -20,15 +20,15 @@ data class RecursoDto(
 )
 
 data class PrestamoDto(
-    @SerializedName("ID") val id: Int,
-    @SerializedName("UsuarioID") val usuarioId: Int,
-    @SerializedName("RecursoID") val recursoId: Int,
-    @SerializedName("FechaInicio") val fechaInicio: String,
-    @SerializedName("FechaLimite") val fechaLimite: String,
-    @SerializedName("FechaDevolucion") val fechaDevolucion: String?,
-    @SerializedName("Estado") val estado: String?,
-    @SerializedName("Recurso") val recurso: RecursoDto?,
-    @SerializedName("Usuario") val usuario: UsuarioDto?
+    @SerializedName("id") val id: Int,
+    @SerializedName("usuarioId") val usuarioId: Int,
+    @SerializedName("recursoId") val recursoId: Int,
+    @SerializedName("fechaInicio") val fechaInicio: String,
+    @SerializedName("fechaLimite") val fechaLimite: String,
+    @SerializedName("fechaDevolucion") val fechaDevolucion: String?,
+    @SerializedName("estado") val estado: String?,
+    @SerializedName("recurso") val recurso: RecursoDto?,
+    @SerializedName("usuario") val usuario: UsuarioDto?
 )
 
 data class LoginRequestDto(
@@ -49,9 +49,9 @@ data class RegisterRequestDto(
 )
 
 data class SolicitarPrestamoRequestDto(
-    @SerializedName("UsuarioID") val usuarioId: Int,
-    @SerializedName("RecursoID") val recursoId: Int,
-    @SerializedName("FechaInicio") val fechaInicio: String,
-    @SerializedName("FechaLimite") val fechaLimite: String,
-    @SerializedName("Estado") val estado: String = "ACTIVO"
+    @SerializedName("usuarioId") val usuarioId: Int,
+    @SerializedName("recursoId") val recursoId: Int,
+    @SerializedName("fechaInicio") val fechaInicio: String,
+    @SerializedName("fechaLimite") val fechaLimite: String,
+    @SerializedName("estado") val estado: String = "ACTIVO"
 )
