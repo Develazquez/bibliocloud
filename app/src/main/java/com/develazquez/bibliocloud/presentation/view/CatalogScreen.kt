@@ -35,24 +35,24 @@ fun CatalogScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Catálogo de Recursos") },
+                title = { Text("Catálogo de recursos") },
                 actions = {
                     IconButton(onClick = { navController.navigate(Screen.CapturePhoto.route) }) {
                         Icon(
                             imageVector = Icons.Default.CameraAlt,
-                            contentDescription = "Fotografiar Portada"
+                            contentDescription = "Fotografiar ortada"
                         )
                     }
                     IconButton(onClick = { navController.navigate(Screen.MyLoans.route) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.List,
-                            contentDescription = "Mis Préstamos"
+                            contentDescription = "Mis réstamos"
                         )
                     }
                     IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
                         Icon(
                             imageVector = Icons.Default.Person,
-                            contentDescription = "Mi Perfil"
+                            contentDescription = "Mi perfil"
                         )
                     }
                 }
@@ -71,7 +71,7 @@ fun CatalogScreen(
                     color = MaterialTheme.colorScheme.errorContainer
                 ) {
                     Text(
-                        text = "⚠ Sin conexión — mostrando datos locales",
+                        text = "Sin conexión — mostrando datos locales",
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         color = MaterialTheme.colorScheme.onErrorContainer,
                         style = MaterialTheme.typography.bodySmall
