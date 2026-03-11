@@ -65,6 +65,17 @@ fun CapturePhotoScreen(
         permissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
+    LaunchedEffect(capturedPhotoUri) {
+        capturedPhotoUri?.let { uri ->
+            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "image/jpeg"
+                putExtra(android.content.Intent.EXTRA_STREAM, uri)
+                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            context.startActivity(android.content.Intent.createChooser(shareIntent, "Compartir foto"))
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -100,7 +111,6 @@ fun CapturePhotoScreen(
                     }
                 }
             } else if (isPhotoCaptured && capturedPhotoUri != null) {
-                // Mostrar foto capturada
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -143,7 +153,6 @@ fun CapturePhotoScreen(
 
                         Button(
                             onClick = {
-                                Toast.makeText(context, "Foto lista para subir a Cloudinary", Toast.LENGTH_SHORT).show()
                                 HardwareUtils.vibrateSuccess(context)
                                 navController.navigateUp()
                             },
@@ -152,9 +161,26 @@ fun CapturePhotoScreen(
                             Text("Aceptar")
                         }
                     }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    OutlinedButton(
+                        onClick = {
+                            capturedPhotoUri?.let { uri ->
+                                val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "image/jpeg"
+                                    putExtra(android.content.Intent.EXTRA_STREAM, uri)
+                                    addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                context.startActivity(android.content.Intent.createChooser(shareIntent, "Compartir foto"))
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Compartir Foto")
+                    }
                 }
             } else {
-                // Vista previa de cámara
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -239,7 +265,12 @@ private fun takePhoto(
         ContextCompat.getMainExecutor(context),
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                val savedUri = Uri.fromFile(photoFile)
+                val authority = "${context.packageName}.fileprovider"
+                val savedUri = androidx.core.content.FileProvider.getUriForFile(
+                    context,
+                    authority,
+                    photoFile
+                )
                 onPhotoCaptured(savedUri)
             }
 

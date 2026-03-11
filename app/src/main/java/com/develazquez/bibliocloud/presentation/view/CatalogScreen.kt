@@ -37,7 +37,6 @@ fun CatalogScreen(
             TopAppBar(
                 title = { Text("Catálogo de Recursos") },
                 actions = {
-                    // Hardware #1: Botón de cámara para capturar portadas
                     IconButton(onClick = { navController.navigate(Screen.CapturePhoto.route) }) {
                         Icon(
                             imageVector = Icons.Default.CameraAlt,
@@ -65,7 +64,7 @@ fun CatalogScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Hardware #3: Banner de sin conexión (sensor de red)
+            // Sensor de conexión
             if (!isConnected) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
