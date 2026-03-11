@@ -33,10 +33,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Hardware #1: Cámara — Pantalla de captura de fotos de portadas de libros.
- * Usa CameraX para la vista previa y captura de imagen.
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CapturePhotoScreen(
@@ -79,7 +76,7 @@ fun CapturePhotoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Fotografiar Portada") },
+                title = { Text("Fotografiar portada") },
                 navigationIcon = {
                     IconButton(onClick = {
                         viewModel.resetState()
@@ -106,7 +103,7 @@ fun CapturePhotoScreen(
                         Text("Se necesita permiso de cámara para fotografiar portadas")
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }) {
-                            Text("Conceder Permiso")
+                            Text("Conceder permiso")
                         }
                     }
                 }
@@ -177,7 +174,7 @@ fun CapturePhotoScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Compartir Foto")
+                        Text("Compartir foto")
                     }
                 }
             } else {
@@ -241,7 +238,7 @@ fun CapturePhotoScreen(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
-                    Text("Capturar Foto", modifier = Modifier.padding(vertical = 8.dp))
+                    Text("Capturar foto", modifier = Modifier.padding(vertical = 8.dp))
                 }
             }
         }
