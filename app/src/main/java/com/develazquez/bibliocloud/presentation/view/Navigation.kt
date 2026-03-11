@@ -19,6 +19,7 @@ sealed class Screen(val route: String) {
         fun createRoute(recursoId: String) = "confirm_loan/$recursoId"
     }
     object MyLoans : Screen("my_loans")
+    object CapturePhoto : Screen("capture_photo")
 }
 
 @Composable
@@ -69,6 +70,10 @@ fun BiblioCloudApp() {
 
         composable(Screen.MyLoans.route) {
             MyLoansScreen(navController = navController)
+        }
+
+        composable(Screen.CapturePhoto.route) {
+            CapturePhotoScreen(navController = navController)
         }
     }
 }

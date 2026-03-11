@@ -1,5 +1,6 @@
 package com.develazquez.bibliocloud.presentation.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.develazquez.bibliocloud.data.local.NetworkMonitor
 import com.develazquez.bibliocloud.domain.model.Recurso
 import com.develazquez.bibliocloud.presentation.state.RecursoState
 import com.develazquez.bibliocloud.presentation.viewmodel.CatalogViewModel
@@ -27,12 +30,20 @@ fun CatalogScreen(
     viewModel: CatalogViewModel = hiltViewModel()
 ) {
     val recursoState by viewModel.recursoState.collectAsState()
+    val isConnected by viewModel.isConnected.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Catálogo de Recursos") },
                 actions = {
+                    // Hardware #1: Botón de cámara para capturar portadas
+                    IconButton(onClick = { navController.navigate(Screen.CapturePhoto.route) }) {
+                        Icon(
+                            imageVector = Icons.Default.CameraAlt,
+                            contentDescription = "Fotografiar Portada"
+                        )
+                    }
                     IconButton(onClick = { navController.navigate(Screen.MyLoans.route) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.List,
@@ -49,44 +60,65 @@ fun CatalogScreen(
             )
         }
     ) { paddingValues ->
-        when (val state = recursoState) {
-            is RecursoState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            // Hardware #3: Banner de sin conexión (sensor de red)
+            if (!isConnected) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.errorContainer
+                ) {
+                    Text(
+                        text = "⚠ Sin conexión — mostrando datos locales",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
-            is RecursoState.Success -> {
-                if (state.recursos.isEmpty()) {
-                    Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                        Text("No hay recursos disponibles")
+
+            when (val state = recursoState) {
+                is RecursoState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
                     }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize().padding(paddingValues),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(state.recursos) { recurso ->
-                            RecursoCard(
-                                recurso = recurso,
-                                onClick = {
-                                    navController.navigate(Screen.RecursoDetail.createRoute(recurso.id))
-                                }
-                            )
+                }
+                is RecursoState.Success -> {
+                    if (state.recursos.isEmpty()) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("No hay recursos disponibles")
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(state.recursos) { recurso ->
+                                RecursoCard(
+                                    recurso = recurso,
+                                    onClick = {
+                                        navController.navigate(Screen.RecursoDetail.createRoute(recurso.id))
+                                    }
+                                )
+                            }
                         }
                     }
                 }
-            }
-            is RecursoState.Error -> {
-                Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = state.message, color = MaterialTheme.colorScheme.error)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { viewModel.refresh() }) { Text("Reintentar") }
+                is RecursoState.Error -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = state.message, color = MaterialTheme.colorScheme.error)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(onClick = { viewModel.refresh() }) { Text("Reintentar") }
+                        }
                     }
                 }
+                RecursoState.Idle -> {}
             }
-            RecursoState.Idle -> {}
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.develazquez.bibliocloud.presentation.view
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,10 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.develazquez.bibliocloud.data.local.HardwareUtils
+import com.develazquez.bibliocloud.domain.model.EstadoPrestamo
 import com.develazquez.bibliocloud.domain.model.Prestamo
+import com.develazquez.bibliocloud.presentation.state.LoanProcessState
 import com.develazquez.bibliocloud.presentation.state.MyLoansState
 import com.develazquez.bibliocloud.presentation.viewmodel.LoanProcessViewModel
 import com.develazquez.bibliocloud.presentation.viewmodel.MyLoansViewModel
@@ -27,6 +32,18 @@ fun MyLoansScreen(
     loanProcessViewModel: LoanProcessViewModel = hiltViewModel()
 ) {
     val loansState by viewModel.loansState.collectAsState()
+    val returnState by loanProcessViewModel.loanState.collectAsState()
+    val context = LocalContext.current
+
+    // Hardware #2: Vibración al devolver préstamo exitosamente
+    LaunchedEffect(returnState) {
+        if (returnState is LoanProcessState.Success) {
+            HardwareUtils.vibrateSuccess(context)
+            Toast.makeText(context, "Préstamo devuelto exitosamente", Toast.LENGTH_SHORT).show()
+            loanProcessViewModel.resetState()
+            viewModel.refresh()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -74,7 +91,6 @@ fun MyLoansScreen(
                                 prestamo = prestamo,
                                 onDevolver = {
                                     loanProcessViewModel.devolverPrestamo(prestamo.id)
-                                    viewModel.refresh()
                                 }
                             )
                         }
@@ -148,8 +164,10 @@ fun PrestamoCard(
                     label = { Text(prestamo.estado.name) }
                 )
 
-                Button(onClick = onDevolver) {
-                    Text("Devolver")
+                if (prestamo.estado == EstadoPrestamo.ACTIVO || prestamo.estado == EstadoPrestamo.ATRASADO) {
+                    Button(onClick = onDevolver) {
+                        Text("Devolver")
+                    }
                 }
             }
         }
