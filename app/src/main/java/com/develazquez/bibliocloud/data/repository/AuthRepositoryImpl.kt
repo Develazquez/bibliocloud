@@ -1,6 +1,6 @@
 package com.develazquez.bibliocloud.data.repository
 
-import com.develazquez.bibliocloud.data.local.TokenManager
+import com.develazquez.bibliocloud.core.network.TokenManager
 import com.develazquez.bibliocloud.data.remote.BiblioCloudApiService
 import com.develazquez.bibliocloud.data.remote.dto.LoginRequestDto
 import com.develazquez.bibliocloud.data.remote.dto.RegisterRequestDto

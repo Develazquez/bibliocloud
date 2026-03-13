@@ -1,4 +1,4 @@
-package com.develazquez.bibliocloud.di
+package com.develazquez.bibliocloud.core.di
 
 import com.develazquez.bibliocloud.data.repository.AuthRepositoryImpl
 import com.develazquez.bibliocloud.data.repository.PrestamoRepositoryImpl

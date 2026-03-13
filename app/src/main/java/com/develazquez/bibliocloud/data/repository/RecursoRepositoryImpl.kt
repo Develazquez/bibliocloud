@@ -1,10 +1,10 @@
 package com.develazquez.bibliocloud.data.repository
 
-import com.develazquez.bibliocloud.data.local.NetworkMonitor
-import com.develazquez.bibliocloud.data.local.TokenManager
-import com.develazquez.bibliocloud.data.local.dao.RecursoDao
-import com.develazquez.bibliocloud.data.local.entity.toDomain
-import com.develazquez.bibliocloud.data.local.entity.toEntity
+import com.develazquez.bibliocloud.core.hardware.NetworkMonitor
+import com.develazquez.bibliocloud.core.network.TokenManager
+import com.develazquez.bibliocloud.core.database.dao.RecursoDao
+import com.develazquez.bibliocloud.core.database.entity.toDomain
+import com.develazquez.bibliocloud.core.database.entity.toEntity
 import com.develazquez.bibliocloud.data.remote.BiblioCloudApiService
 import com.develazquez.bibliocloud.data.remote.mapper.toDomain
 import com.develazquez.bibliocloud.domain.model.CategoriaRecurso

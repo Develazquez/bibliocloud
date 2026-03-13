@@ -1,4 +1,4 @@
-package com.develazquez.bibliocloud.data.local
+package com.develazquez.bibliocloud.core.network
 
 import android.content.SharedPreferences
 import javax.inject.Inject
