@@ -2,6 +2,7 @@ package com.develazquez.bibliocloud.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.develazquez.bibliocloud.data.local.NetworkMonitor
 import com.develazquez.bibliocloud.domain.usecase.GetAvailableResourcesUseCase
 import com.develazquez.bibliocloud.presentation.state.RecursoState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,11 +14,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
-    private val getAvailableResourcesUseCase: GetAvailableResourcesUseCase
+    private val getAvailableResourcesUseCase: GetAvailableResourcesUseCase,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _recursoState = MutableStateFlow<RecursoState>(RecursoState.Idle)
     val recursoState: StateFlow<RecursoState> = _recursoState.asStateFlow()
+
+    val isConnected: StateFlow<Boolean> = networkMonitor.isConnected
 
     init {
         loadRecursos()

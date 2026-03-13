@@ -16,12 +16,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://api.bibliocloud.com/v1/"
+    // Asegúrate de que esta URL termine en "/"
+    private const val BASE_URL = "http://98.91.119.150:8080/"
 
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
+            // Esto imprimirá en el Logcat todo el cuerpo de las peticiones y respuestas
             level = HttpLoggingInterceptor.Level.BODY
         }
     }

@@ -5,34 +5,39 @@ import com.develazquez.bibliocloud.data.remote.dto.PrestamoDto
 import com.develazquez.bibliocloud.data.remote.dto.RecursoDto
 import com.develazquez.bibliocloud.data.remote.dto.UsuarioDto
 import com.develazquez.bibliocloud.domain.model.*
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.*
+
+private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+    timeZone = TimeZone.getTimeZone("UTC")
+}
 
 fun UsuarioDto.toDomain(): Usuario {
     return Usuario(
-        id = this.id,
-        nombre = this.nombre,
-        email = this.email,
-        estado = when (this.estado.uppercase()) {
+        id = this.id.toString(),
+        nombre = this.nombre ?: "Sin nombre",
+        email = this.email ?: "",
+        estado = when ((this.estado ?: "").uppercase()) {
             "ACTIVO" -> EstadoUsuario.ACTIVO
             "DEUDOR" -> EstadoUsuario.DEUDOR
             else -> EstadoUsuario.ACTIVO
         },
-        cantidadPrestamosActuales = this.cantidadPrestamosActuales
+        cantidadPrestamosActuales = this.cantidadPrestamosActuales ?: 0
     )
 }
 
 fun RecursoDto.toDomain(): Recurso {
     return Recurso(
-        id = this.id,
+        id = this.id.toString(),
         titulo = this.titulo,
-        categoria = when (this.categoria.uppercase()) {
+        categoria = when ((this.categoria ?: "").uppercase()) {
             "LIBRO" -> CategoriaRecurso.LIBRO
             "HERRAMIENTA" -> CategoriaRecurso.HERRAMIENTA
             "DISPOSITIVO" -> CategoriaRecurso.DISPOSITIVO
             else -> CategoriaRecurso.OTRO
         },
         imagenUrl = this.imagenUrl,
-        estado = when (this.estado.uppercase()) {
+        estado = when ((this.estado ?: "").uppercase()) {
             "DISPONIBLE" -> EstadoRecurso.DISPONIBLE
             "PRESTADO" -> EstadoRecurso.PRESTADO
             "EN_MANTENIMIENTO" -> EstadoRecurso.EN_MANTENIMIENTO
@@ -44,13 +49,15 @@ fun RecursoDto.toDomain(): Recurso {
 
 fun PrestamoDto.toDomain(): Prestamo {
     return Prestamo(
-        id = this.id,
-        usuarioId = this.usuarioId,
-        recursoId = this.recursoId,
-        fechaInicio = Date(this.fechaInicio),
-        fechaFinPrevista = Date(this.fechaFinPrevista),
-        fechaDevolucionReal = this.fechaDevolucionReal?.let { Date(it) },
-        estado = when (this.estado.uppercase()) {
+        id = this.id.toString(),
+        usuarioId = this.usuarioId.toString(),
+        recursoId = this.recursoId.toString(),
+        fechaInicio = try { apiDateFormat.parse(this.fechaInicio) ?: Date() } catch (e: Exception) { Date() },
+        fechaFinPrevista = try { apiDateFormat.parse(this.fechaLimite) ?: Date() } catch (e: Exception) { Date() },
+        fechaDevolucionReal = this.fechaDevolucion?.let {
+            try { apiDateFormat.parse(it) } catch (e: Exception) { null }
+        },
+        estado = when ((this.estado ?: "").uppercase()) {
             "ACTIVO" -> EstadoPrestamo.ACTIVO
             "DEVUELTO" -> EstadoPrestamo.DEVUELTO
             "ATRASADO" -> EstadoPrestamo.ATRASADO
@@ -62,8 +69,19 @@ fun PrestamoDto.toDomain(): Prestamo {
 }
 
 fun LoginResponseDto.toDomain(): LoginResponse {
+    val usuario = this.usuario?.toDomain() ?: Usuario(
+        id = "",
+        nombre = "Usuario",
+        email = "",
+        estado = EstadoUsuario.ACTIVO,
+        cantidadPrestamosActuales = 0
+    )
+    
+    // Si el servidor no devuelve token, generar uno basado en el usuario
+    val token = this.token ?: "token_${usuario.id}_${System.currentTimeMillis()}"
+    
     return LoginResponse(
-        token = this.token,
-        usuario = this.usuario.toDomain()
+        token = token,
+        usuario = usuario
     )
 }

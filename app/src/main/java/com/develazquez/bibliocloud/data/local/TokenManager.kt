@@ -7,8 +7,8 @@ class TokenManager @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {
     companion object {
-        private const val KEY_TOKEN = "auth_token"
-        private const val KEY_USER_ID = "user_id"
+        private const val KEY_TOKEN = "bibliocloud_auth_token"
+        private const val KEY_USER_ID = "bibliocloud_user_id"
     }
 
     fun saveToken(token: String) {

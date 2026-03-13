@@ -7,9 +7,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.develazquez.bibliocloud.data.local.HardwareUtils
 import com.develazquez.bibliocloud.presentation.state.LoanProcessState
 import com.develazquez.bibliocloud.presentation.viewmodel.LoanProcessViewModel
 
@@ -62,10 +64,13 @@ fun ConfirmLoanScreen(
     viewModel: LoanProcessViewModel = hiltViewModel()
 ) {
     val loanState by viewModel.loanState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(loanState) {
         when (loanState) {
             is LoanProcessState.Success -> {
+                // Hardware #2: Vibración de éxito al confirmar préstamo
+                HardwareUtils.vibrateSuccess(context)
                 navController.navigate(Screen.MyLoans.route) {
                     popUpTo(Screen.Catalog.route)
                 }
