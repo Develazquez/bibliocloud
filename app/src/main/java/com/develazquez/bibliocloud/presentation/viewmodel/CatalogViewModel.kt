@@ -2,7 +2,7 @@ package com.develazquez.bibliocloud.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.develazquez.bibliocloud.data.local.NetworkMonitor
+import com.develazquez.bibliocloud.core.hardware.NetworkMonitor
 import com.develazquez.bibliocloud.domain.usecase.GetAvailableResourcesUseCase
 import com.develazquez.bibliocloud.presentation.state.RecursoState
 import dagger.hilt.android.lifecycle.HiltViewModel

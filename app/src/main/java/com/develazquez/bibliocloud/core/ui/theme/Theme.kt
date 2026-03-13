@@ -1,4 +1,4 @@
-package com.develazquez.bibliocloud.ui.theme
+package com.develazquez.bibliocloud.core.ui.theme
 
 import android.app.Activity
 import android.os.Build

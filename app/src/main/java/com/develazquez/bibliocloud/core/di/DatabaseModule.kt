@@ -1,13 +1,13 @@
-package com.develazquez.bibliocloud.di
+package com.develazquez.bibliocloud.core.di
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.develazquez.bibliocloud.data.local.BiblioCloudDatabase
-import com.develazquez.bibliocloud.data.local.NetworkMonitor
-import com.develazquez.bibliocloud.data.local.TokenManager
-import com.develazquez.bibliocloud.data.local.dao.PrestamoDao
-import com.develazquez.bibliocloud.data.local.dao.RecursoDao
+import com.develazquez.bibliocloud.core.database.AppDatabase
+import com.develazquez.bibliocloud.core.hardware.NetworkMonitor
+import com.develazquez.bibliocloud.core.network.TokenManager
+import com.develazquez.bibliocloud.core.database.dao.PrestamoDao
+import com.develazquez.bibliocloud.core.database.dao.RecursoDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalModule {
+object DatabaseModule {
 
     @Provides
     @Singleton
@@ -35,21 +35,21 @@ object LocalModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): BiblioCloudDatabase {
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,
-            BiblioCloudDatabase::class.java,
+            AppDatabase::class.java,
             "bibliocloud_db"
         ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
-    fun provideRecursoDao(database: BiblioCloudDatabase): RecursoDao {
+    fun provideRecursoDao(database: AppDatabase): RecursoDao {
         return database.recursoDao()
     }
 
     @Provides
-    fun providePrestamoDao(database: BiblioCloudDatabase): PrestamoDao {
+    fun providePrestamoDao(database: AppDatabase): PrestamoDao {
         return database.prestamoDao()
     }
 

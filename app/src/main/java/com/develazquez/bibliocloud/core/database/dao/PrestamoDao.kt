@@ -1,10 +1,10 @@
-package com.develazquez.bibliocloud.data.local.dao
+package com.develazquez.bibliocloud.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.develazquez.bibliocloud.data.local.entity.PrestamoEntity
+import com.develazquez.bibliocloud.core.database.entity.PrestamoEntity
 
 @Dao
 interface PrestamoDao {

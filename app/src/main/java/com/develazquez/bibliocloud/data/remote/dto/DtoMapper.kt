@@ -20,15 +20,15 @@ data class RecursoDto(
 )
 
 data class PrestamoDto(
-    @SerializedName("id") val id: Int,
-    @SerializedName("usuarioId") val usuarioId: Int,
-    @SerializedName("recursoId") val recursoId: Int,
-    @SerializedName("fechaInicio") val fechaInicio: String,
-    @SerializedName("fechaLimite") val fechaLimite: String,
-    @SerializedName("fechaDevolucion") val fechaDevolucion: String?,
-    @SerializedName("estado") val estado: String?,
-    @SerializedName("recurso") val recurso: RecursoDto?,
-    @SerializedName("usuario") val usuario: UsuarioDto?
+    @SerializedName("ID", alternate = ["id"]) val id: Int,
+    @SerializedName("UsuarioID", alternate = ["usuarioId"]) val usuarioId: Int,
+    @SerializedName("RecursoID", alternate = ["recursoId"]) val recursoId: Int,
+    @SerializedName("FechaInicio", alternate = ["fechaInicio"]) val fechaInicio: String,
+    @SerializedName("FechaLimite", alternate = ["fechaLimite"]) val fechaLimite: String,
+    @SerializedName("FechaDevolucion", alternate = ["fechaDevolucion"]) val fechaDevolucion: String?,
+    @SerializedName("Estado", alternate = ["estado"]) val estado: String?,
+    @SerializedName("Recurso", alternate = ["recurso"]) val recurso: RecursoDto?,
+    @SerializedName("Usuario", alternate = ["usuario"]) val usuario: UsuarioDto?
 )
 
 data class LoginRequestDto(

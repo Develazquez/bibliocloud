@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.develazquez.bibliocloud.presentation.view.BiblioCloudApp
-import com.develazquez.bibliocloud.ui.theme.BiblioCloudTheme
+import com.develazquez.bibliocloud.core.ui.theme.BiblioCloudTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

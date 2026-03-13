@@ -12,6 +12,30 @@ private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.
     timeZone = TimeZone.getTimeZone("UTC")
 }
 
+private val apiDateFormatWithFractions = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.US).apply {
+    timeZone = TimeZone.getTimeZone("UTC")
+}
+
+private fun parseDateSafe(dateString: String?): Date? {
+    if (dateString.isNullOrEmpty()) return null
+    return try {
+        if (dateString.contains(".")) {
+            val parts = dateString.split(".")
+            val nanos = parts[1].removeSuffix("Z")
+            if (nanos.length > 3) {
+                // Truncate to milliseconds dynamically because SSSSSS is strict on digit count or might have fewer digits. Actually, SimpleDateFormat allows `.SSS` logic but let's just use the SSSSSS format.
+                apiDateFormatWithFractions.parse(dateString)
+            } else {
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }.parse(dateString)
+            }
+        } else {
+            apiDateFormat.parse(dateString)
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+
 fun UsuarioDto.toDomain(): Usuario {
     return Usuario(
         id = this.id.toString(),
@@ -52,11 +76,9 @@ fun PrestamoDto.toDomain(): Prestamo {
         id = this.id.toString(),
         usuarioId = this.usuarioId.toString(),
         recursoId = this.recursoId.toString(),
-        fechaInicio = try { apiDateFormat.parse(this.fechaInicio) ?: Date() } catch (e: Exception) { Date() },
-        fechaFinPrevista = try { apiDateFormat.parse(this.fechaLimite) ?: Date() } catch (e: Exception) { Date() },
-        fechaDevolucionReal = this.fechaDevolucion?.let {
-            try { apiDateFormat.parse(it) } catch (e: Exception) { null }
-        },
+        fechaInicio = parseDateSafe(this.fechaInicio) ?: Date(),
+        fechaFinPrevista = parseDateSafe(this.fechaLimite) ?: Date(),
+        fechaDevolucionReal = parseDateSafe(this.fechaDevolucion),
         estado = when ((this.estado ?: "").uppercase()) {
             "ACTIVO" -> EstadoPrestamo.ACTIVO
             "DEVUELTO" -> EstadoPrestamo.DEVUELTO

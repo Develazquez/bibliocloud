@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.develazquez.bibliocloud.data.local.HardwareUtils
+import com.develazquez.bibliocloud.core.database.HardwareUtils
 import com.develazquez.bibliocloud.presentation.viewmodel.CapturePhotoViewModel
 import java.io.File
 import java.text.SimpleDateFormat

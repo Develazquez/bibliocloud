@@ -1,9 +1,8 @@
-package com.develazquez.bibliocloud.data.local.entity
+package com.develazquez.bibliocloud.core.database.entity
 
 import com.develazquez.bibliocloud.domain.model.*
 import java.util.Date
 
-// ==================== Recurso ====================
 
 fun RecursoEntity.toDomain(): Recurso {
     return Recurso(
@@ -37,7 +36,6 @@ fun Recurso.toEntity(): RecursoEntity {
     )
 }
 
-// ==================== Prestamo ====================
 
 fun PrestamoEntity.toDomain(): Prestamo {
     return Prestamo(

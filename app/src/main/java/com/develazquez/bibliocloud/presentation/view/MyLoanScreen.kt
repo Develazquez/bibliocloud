@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.develazquez.bibliocloud.data.local.HardwareUtils
+import com.develazquez.bibliocloud.core.database.HardwareUtils
 import com.develazquez.bibliocloud.domain.model.EstadoPrestamo
 import com.develazquez.bibliocloud.domain.model.Prestamo
 import com.develazquez.bibliocloud.presentation.state.LoanProcessState
@@ -35,7 +35,6 @@ fun MyLoansScreen(
     val returnState by loanProcessViewModel.loanState.collectAsState()
     val context = LocalContext.current
 
-    // Hardware #2: Vibración al devolver préstamo exitosamente
     LaunchedEffect(returnState) {
         if (returnState is LoanProcessState.Success) {
             HardwareUtils.vibrateSuccess(context)

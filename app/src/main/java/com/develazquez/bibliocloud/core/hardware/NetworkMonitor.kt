@@ -1,4 +1,4 @@
-package com.develazquez.bibliocloud.data.local
+package com.develazquez.bibliocloud.core.hardware
 
 import android.content.Context
 import android.net.ConnectivityManager

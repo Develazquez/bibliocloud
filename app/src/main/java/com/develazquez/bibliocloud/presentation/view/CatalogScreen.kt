@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.develazquez.bibliocloud.data.local.NetworkMonitor
 import com.develazquez.bibliocloud.domain.model.Recurso
 import com.develazquez.bibliocloud.presentation.state.RecursoState
 import com.develazquez.bibliocloud.presentation.viewmodel.CatalogViewModel

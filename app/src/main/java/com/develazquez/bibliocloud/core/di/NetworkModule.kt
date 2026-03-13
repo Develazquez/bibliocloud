@@ -1,4 +1,4 @@
-package com.develazquez.bibliocloud.di
+package com.develazquez.bibliocloud.core.di
 
 import com.develazquez.bibliocloud.data.remote.BiblioCloudApiService
 import dagger.Module
@@ -16,7 +16,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    // Asegúrate de que esta URL termine en "/"
     private const val BASE_URL = "http://98.91.119.150:8080/"
 
     @Provides

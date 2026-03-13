@@ -1,4 +1,4 @@
-package com.develazquez.bibliocloud.data.local
+package com.develazquez.bibliocloud.core.database
 
 import android.content.Context
 import android.os.Build
