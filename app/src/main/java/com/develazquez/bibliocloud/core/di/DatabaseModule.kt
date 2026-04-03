@@ -1,4 +1,4 @@
-package com.develazquez.bibliocloud.core.di
+﻿package com.develazquez.bibliocloud.core.di
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,8 +6,8 @@ import androidx.room.Room
 import com.develazquez.bibliocloud.core.database.AppDatabase
 import com.develazquez.bibliocloud.core.hardware.NetworkMonitor
 import com.develazquez.bibliocloud.core.network.TokenManager
-import com.develazquez.bibliocloud.core.database.dao.PrestamoDao
-import com.develazquez.bibliocloud.core.database.dao.RecursoDao
+import com.develazquez.bibliocloud.features.loans.data.datasources.local.dao.PrestamoDao
+import com.develazquez.bibliocloud.features.catalog.data.datasources.local.dao.RecursoDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
