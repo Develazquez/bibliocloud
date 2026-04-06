@@ -1,4 +1,4 @@
-﻿package com.develazquez.bibliocloud.core.database
+package com.develazquez.bibliocloud.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -9,7 +9,7 @@ import com.develazquez.bibliocloud.features.catalog.data.datasources.local.entit
 
 @Database(
     entities = [RecursoEntity::class, PrestamoEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -1,4 +1,4 @@
-﻿package com.develazquez.bibliocloud.data.remote.mapper
+package com.develazquez.bibliocloud.data.remote.mapper
 
 import com.develazquez.bibliocloud.data.remote.dto.LoginResponseDto
 import com.develazquez.bibliocloud.data.remote.dto.PrestamoDto
@@ -69,7 +69,8 @@ fun RecursoDto.toDomain(): Recurso {
             "EN_MANTENIMIENTO" -> EstadoRecurso.EN_MANTENIMIENTO
             else -> EstadoRecurso.DISPONIBLE
         },
-        descripcion = this.descripcion
+        descripcion = this.descripcion,
+        audioUrl = this.audioUrl
     )
 }
 

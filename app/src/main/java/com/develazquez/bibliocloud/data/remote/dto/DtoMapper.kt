@@ -16,7 +16,8 @@ data class RecursoDto(
     @SerializedName("categoria") val categoria: String?,
     @SerializedName("imagen_url") val imagenUrl: String?,
     @SerializedName("estado") val estado: String?,
-    @SerializedName("descripcion") val descripcion: String?
+    @SerializedName("descripcion") val descripcion: String?,
+    @SerializedName("audio_url") val audioUrl: String?
 )
 
 data class PrestamoDto(

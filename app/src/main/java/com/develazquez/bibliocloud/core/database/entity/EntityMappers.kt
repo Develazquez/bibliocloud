@@ -25,7 +25,8 @@ fun RecursoEntity.toDomain(): Recurso {
             "EN_MANTENIMIENTO" -> EstadoRecurso.EN_MANTENIMIENTO
             else -> EstadoRecurso.DISPONIBLE
         },
-        descripcion = descripcion
+        descripcion = descripcion,
+        audioUrl = audioUrl
     )
 }
 
@@ -36,7 +37,8 @@ fun Recurso.toEntity(): RecursoEntity {
         categoria = categoria.name,
         imagenUrl = imagenUrl,
         estado = estado.name,
-        descripcion = descripcion
+        descripcion = descripcion,
+        audioUrl = audioUrl
     )
 }
 
