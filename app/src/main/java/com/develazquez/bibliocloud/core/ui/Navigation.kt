@@ -1,6 +1,7 @@
 package com.develazquez.bibliocloud.core.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,8 +35,17 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun BiblioCloudApp() {
+fun BiblioCloudApp(
+    intentNavigateTo: String? = null,
+    intentBookId: String? = null
+) {
     val navController = rememberNavController()
+
+    LaunchedEffect(intentNavigateTo, intentBookId) {
+        if (intentNavigateTo == "loan_details" && intentBookId != null) {
+            navController.navigate(Screen.RecursoDetail.createRoute(intentBookId, isLoaned = true))
+        }
+    }
 
     NavHost(
         navController = navController,

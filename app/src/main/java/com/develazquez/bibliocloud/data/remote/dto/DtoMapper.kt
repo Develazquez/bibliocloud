@@ -22,11 +22,11 @@ data class RecursoDto(
 
 data class PrestamoDto(
     @SerializedName("ID", alternate = ["id"]) val id: Int,
-    @SerializedName("UsuarioID", alternate = ["usuarioId"]) val usuarioId: Int,
-    @SerializedName("RecursoID", alternate = ["recursoId"]) val recursoId: Int,
-    @SerializedName("FechaInicio", alternate = ["fechaInicio"]) val fechaInicio: String,
-    @SerializedName("FechaLimite", alternate = ["fechaLimite"]) val fechaLimite: String,
-    @SerializedName("FechaDevolucion", alternate = ["fechaDevolucion"]) val fechaDevolucion: String?,
+    @SerializedName("UsuarioID", alternate = ["usuarioId", "usuario_id"]) val usuarioId: Int,
+    @SerializedName("RecursoID", alternate = ["recursoId", "recurso_id"]) val recursoId: Int,
+    @SerializedName("FechaInicio", alternate = ["fechaInicio", "fecha_prestamo"]) val fechaInicio: String,
+    @SerializedName("FechaLimite", alternate = ["fechaLimite", "fecha_devolucion_estimada"]) val fechaLimite: String,
+    @SerializedName("FechaDevolucion", alternate = ["fechaDevolucion", "fecha_devolucion_real"]) val fechaDevolucion: String?,
     @SerializedName("Estado", alternate = ["estado"]) val estado: String?,
     @SerializedName("Recurso", alternate = ["recurso"]) val recurso: RecursoDto?,
     @SerializedName("Usuario", alternate = ["usuario"]) val usuario: UsuarioDto?
@@ -50,9 +50,13 @@ data class RegisterRequestDto(
 )
 
 data class SolicitarPrestamoRequestDto(
-    @SerializedName("usuarioId") val usuarioId: Int,
-    @SerializedName("recursoId") val recursoId: Int,
-    @SerializedName("fechaInicio") val fechaInicio: String,
-    @SerializedName("fechaLimite") val fechaLimite: String,
+    @SerializedName("usuario_id") val usuarioId: Int,
+    @SerializedName("recurso_id") val recursoId: Int,
+    @SerializedName("fecha_prestamo") val fechaInicio: String,
+    @SerializedName("fecha_devolucion_estimada") val fechaLimite: String,
     @SerializedName("estado") val estado: String = "ACTIVO"
+)
+
+data class FcmTokenRequestDto(
+    @SerializedName("token") val token: String
 )

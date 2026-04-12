@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".BiblioCloudApplication"
@@ -45,7 +46,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- Audio service -->
+        <!-- Audio Service -->
         <service
             android:name=".core.audio.AudioService"
             android:foregroundServiceType="mediaPlayback"
@@ -55,6 +56,14 @@
             </intent-filter>
         </service>
 
+        <!-- FCM -->
+        <service
+            android:name=".core.notifications.FCMNotificationService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

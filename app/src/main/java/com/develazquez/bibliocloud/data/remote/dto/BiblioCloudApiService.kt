@@ -36,7 +36,6 @@ interface BiblioCloudApiService {
         @Header("Authorization") token: String,
         @Path("id") id: String?
     ): Response<Unit>
-    // ============ RECURSOS ============
 
     @GET("recursos")
     suspend fun getRecursos(@Header("Authorization") token: String): Response<List<RecursoDto>>
@@ -67,11 +66,11 @@ interface BiblioCloudApiService {
     ): Response<Unit>
 
 
-    // ============ PRÉSTAMOS ============
 
     @POST("prestamos")
     suspend fun solicitarPrestamo(
         @Header("Authorization") token: String,
+        @Header("X-User-Id") userId: String,
         @Body request: SolicitarPrestamoRequestDto
     ): Response<PrestamoDto>
 
@@ -100,6 +99,20 @@ interface BiblioCloudApiService {
     @POST("prestamos/{id}/devolver")
     suspend fun devolverPrestamo(
         @Header("Authorization") token: String,
+        @Header("X-User-Id") userId: String,
         @Path("id") id: String
     ): Response<PrestamoDto>
+    
+    // ============ FCM ============
+    @POST("fcm/register-token")
+    suspend fun registerFcmToken(
+        @Header("X-User-Id") userId: String,
+        @Body request: FcmTokenRequestDto
+    ): Response<Map<String, String>>
+
+    @HTTP(method = "DELETE", path = "fcm/remove-token", hasBody = true)
+    suspend fun removeFcmToken(
+        @Header("X-User-Id") userId: String,
+        @Body request: FcmTokenRequestDto
+    ): Response<Map<String, String>>
 }

@@ -1,4 +1,4 @@
-﻿package com.develazquez.bibliocloud.features.auth.domain.repositories
+package com.develazquez.bibliocloud.features.auth.domain.repositories
 
 import com.develazquez.bibliocloud.features.auth.domain.entities.LoginRequest
 import com.develazquez.bibliocloud.features.auth.domain.entities.LoginResponse
@@ -10,5 +10,6 @@ interface AuthRepository {
     suspend fun logout(): Result<Unit>
     suspend fun getCurrentUser(): Result<Usuario?>
     suspend fun deleteAccount(): Result<Unit>
-
+    suspend fun registerFcmToken(token: String): Result<Unit>
+    suspend fun removeFcmToken(token: String): Result<Unit>
 }

@@ -1,9 +1,10 @@
-﻿package com.develazquez.bibliocloud.features.auth.data.repositories
+package com.develazquez.bibliocloud.features.auth.data.repositories
 
 import com.develazquez.bibliocloud.core.network.TokenManager
 import com.develazquez.bibliocloud.data.remote.BiblioCloudApiService
 import com.develazquez.bibliocloud.data.remote.dto.LoginRequestDto
 import com.develazquez.bibliocloud.data.remote.dto.RegisterRequestDto
+import com.develazquez.bibliocloud.data.remote.dto.FcmTokenRequestDto
 import com.develazquez.bibliocloud.data.remote.mapper.toDomain
 import com.develazquez.bibliocloud.features.auth.domain.entities.LoginRequest
 import com.develazquez.bibliocloud.features.auth.domain.entities.LoginResponse
@@ -38,6 +39,10 @@ class AuthRepositoryImpl @Inject constructor(
                 tokenManager.saveToken(loginResponse.token)
                 tokenManager.saveUserId(loginResponse.usuario.id)
 
+                tokenManager.getFcmToken()?.let { fcmToken ->
+                    registerFcmToken(fcmToken)
+                }
+
                 Result.success(loginResponse)
             } else {
                 Result.failure(Exception("Credenciales incorrectas"))
@@ -69,6 +74,11 @@ class AuthRepositoryImpl @Inject constructor(
                 
                 tokenManager.saveToken(loginResponse.token)
                 tokenManager.saveUserId(loginResponse.usuario.id)
+
+                tokenManager.getFcmToken()?.let { fcmToken ->
+                    registerFcmToken(fcmToken)
+                }
+                
                 Result.success(loginResponse)
             } else {
                 val errorMessage = when (response.code()) {
@@ -85,6 +95,10 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun logout(): Result<Unit> {
         return try {
+            val fcmToken = tokenManager.getFcmToken()
+            if (fcmToken != null) {
+                removeFcmToken(fcmToken)
+            }
             tokenManager.clearToken()
             Result.success(Unit)
         } catch (e: Exception) {
@@ -139,6 +153,39 @@ class AuthRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Result.failure(Exception("Error de red al intentar eliminar cuenta: ${e.message}"))
+        }
+    }
+
+    override suspend fun registerFcmToken(token: String): Result<Unit> {
+        return try {
+            tokenManager.saveFcmToken(token) // Guardamos localmente sin importar autenticación
+            val userId = tokenManager.getUserId()
+            if (userId == null || userId == "0") return Result.failure(Exception("Usuario no autenticado"))
+
+            val response = apiService.registerFcmToken(userId, FcmTokenRequestDto(token))
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Error al registrar token FCM"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun removeFcmToken(token: String): Result<Unit> {
+        return try {
+            val userId = tokenManager.getUserId()
+            if (userId == null || userId == "0") return Result.failure(Exception("Usuario no autenticado"))
+
+            val response = apiService.removeFcmToken(userId, FcmTokenRequestDto(token))
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Error al remover token FCM"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

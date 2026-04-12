@@ -1,5 +1,6 @@
-﻿package com.develazquez.bibliocloud.features.loans.data.repositories
+package com.develazquez.bibliocloud.features.loans.data.repositories
 
+import android.util.Log
 import com.develazquez.bibliocloud.core.hardware.NetworkMonitor
 import com.develazquez.bibliocloud.core.network.TokenManager
 import com.develazquez.bibliocloud.features.loans.data.datasources.local.dao.PrestamoDao
@@ -52,11 +53,10 @@ class PrestamoRepositoryImpl @Inject constructor(
                 estado = "ACTIVO"
             )
 
-            val response = apiService.solicitarPrestamo(getAuthHeader(), dto)
+            val response = apiService.solicitarPrestamo(getAuthHeader(), usuarioId, dto)
 
             if (response.isSuccessful && response.body() != null) {
                 val prestamo = response.body()!!.toDomain()
-                // Guardar en caché Room
                 prestamoDao.insert(prestamo.toEntity())
                 Result.success(prestamo)
             } else {
@@ -69,11 +69,11 @@ class PrestamoRepositoryImpl @Inject constructor(
 
     override suspend fun devolverPrestamo(prestamoId: String): Result<Prestamo> {
         return try {
-            val response = apiService.devolverPrestamo(getAuthHeader(), prestamoId)
+            val usuarioId = tokenManager.getUserId() ?: ""
+            val response = apiService.devolverPrestamo(getAuthHeader(), usuarioId, prestamoId)
 
             if (response.isSuccessful && response.body() != null) {
                 val prestamo = response.body()!!.toDomain()
-                // Actualizar caché Room con el estado devuelto
                 prestamoDao.insert(prestamo.toEntity())
                 Result.success(prestamo)
             } else {
@@ -89,7 +89,6 @@ class PrestamoRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun getMisPrestamos(): Result<List<Prestamo>> {
         return try {
             val usuarioId = tokenManager.getUserId()
@@ -101,10 +100,13 @@ class PrestamoRepositoryImpl @Inject constructor(
                 val response = apiService.getAllPrestamos(getAuthHeader())
                 if (response.isSuccessful && response.body() != null) {
                     val todosPrestamos = response.body()!!.map { it.toDomain() }
-                    val misPrestamos = todosPrestamos.filter {
-                        it.usuarioId == usuarioId
+                    Log.d("PrestamoRepo", "Total préstamos recibidos del servidor: ${todosPrestamos.size}")
+                    Log.d("PrestamoRepo", "Mi usuarioId guardado localmente: '$usuarioId'")
+                    todosPrestamos.forEach {
+                        Log.d("PrestamoRepo", "  -> Préstamo id=${it.id}, usuarioId='${it.usuarioId}'")
                     }
-                    // Persistir estados en caché Room
+                    val misPrestamos = todosPrestamos.filter { it.usuarioId == usuarioId }
+                    Log.d("PrestamoRepo", "Préstamos filtrados para mí: ${misPrestamos.size}")
                     prestamoDao.deleteAll()
                     prestamoDao.insertAll(misPrestamos.map { it.toEntity() })
                     Result.success(misPrestamos)
@@ -112,7 +114,6 @@ class PrestamoRepositoryImpl @Inject constructor(
                     returnCachedPrestamos(usuarioId)
                 }
             } else {
-                // Sin red: retornar préstamos cacheados (persistencia de estados)
                 returnCachedPrestamos(usuarioId)
             }
         } catch (e: Exception) {
