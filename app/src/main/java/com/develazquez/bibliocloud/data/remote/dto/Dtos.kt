@@ -4,7 +4,9 @@ import com.develazquez.bibliocloud.data.remote.dto.LoginResponseDto
 import com.develazquez.bibliocloud.data.remote.dto.PrestamoDto
 import com.develazquez.bibliocloud.data.remote.dto.RecursoDto
 import com.develazquez.bibliocloud.data.remote.dto.UsuarioDto
-import com.develazquez.bibliocloud.domain.model.*
+import com.develazquez.bibliocloud.features.auth.domain.entities.*
+import com.develazquez.bibliocloud.features.catalog.domain.entities.*
+import com.develazquez.bibliocloud.features.loans.domain.entities.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,7 +69,8 @@ fun RecursoDto.toDomain(): Recurso {
             "EN_MANTENIMIENTO" -> EstadoRecurso.EN_MANTENIMIENTO
             else -> EstadoRecurso.DISPONIBLE
         },
-        descripcion = this.descripcion
+        descripcion = this.descripcion,
+        audioUrl = this.audioUrl
     )
 }
 

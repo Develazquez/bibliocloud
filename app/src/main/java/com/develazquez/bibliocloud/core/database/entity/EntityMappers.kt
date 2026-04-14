@@ -1,7 +1,11 @@
 package com.develazquez.bibliocloud.core.database.entity
 
-import com.develazquez.bibliocloud.domain.model.*
+import com.develazquez.bibliocloud.features.auth.domain.entities.*
+import com.develazquez.bibliocloud.features.catalog.domain.entities.*
+import com.develazquez.bibliocloud.features.loans.domain.entities.*
 import java.util.Date
+import com.develazquez.bibliocloud.features.catalog.data.datasources.local.entity.RecursoEntity
+import com.develazquez.bibliocloud.features.loans.data.datasources.local.entity.PrestamoEntity
 
 
 fun RecursoEntity.toDomain(): Recurso {
@@ -21,7 +25,8 @@ fun RecursoEntity.toDomain(): Recurso {
             "EN_MANTENIMIENTO" -> EstadoRecurso.EN_MANTENIMIENTO
             else -> EstadoRecurso.DISPONIBLE
         },
-        descripcion = descripcion
+        descripcion = descripcion,
+        audioUrl = audioUrl
     )
 }
 
@@ -32,7 +37,8 @@ fun Recurso.toEntity(): RecursoEntity {
         categoria = categoria.name,
         imagenUrl = imagenUrl,
         estado = estado.name,
-        descripcion = descripcion
+        descripcion = descripcion,
+        audioUrl = audioUrl
     )
 }
 

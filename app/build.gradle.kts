@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -40,7 +41,6 @@ android {
     buildFeatures {
         compose = true
     }
-    // IMPORTANTE: Se eliminó composeOptions para compatibilidad con Kotlin 2.0.21
 
     packaging {
         resources {
@@ -59,31 +59,39 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    // Hilt e Inyección de dependencias
+    // Hilt e inyección de dependencias
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose) // Usando el catálogo
+    implementation(libs.androidx.hilt.navigation.compose) 
 
-    // Retrofit y Redes (LIMPIO y sin duplicados)
+    // Retrofit y redes
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
 
-    // Navegación e Imágenes
+    // Navegación e imágenes
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
 
-    // Room (Caché local)
+    // Room 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
 
-    // CameraX (Captura de fotos)
+    // CameraX 
     implementation(libs.camerax.core)
     implementation(libs.camerax.camera2)
     implementation(libs.camerax.lifecycle)
     implementation(libs.camerax.view)
+
+    // ExoPlayer / Audio Service
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.session)
+
+    // FCM
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
 
     // Testing
     testImplementation(libs.junit)
