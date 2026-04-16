@@ -20,7 +20,8 @@ sealed class AdminUiState {
 
 @HiltViewModel
 class AdminViewModel @Inject constructor(
-    private val adminRepository: AdminRepository
+    private val adminRepository: AdminRepository,
+    private val logoutUseCase: com.develazquez.bibliocloud.features.auth.domain.usescases.LogoutUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AdminUiState>(AdminUiState.Loading)
@@ -66,6 +67,15 @@ class AdminViewModel @Inject constructor(
         viewModelScope.launch {
             adminRepository.markLoanAsReturned(loanId)
             fetchAdminData()
+        }
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            val result = logoutUseCase()
+            if (result.isSuccess) {
+                onSuccess()
+            }
         }
     }
 }

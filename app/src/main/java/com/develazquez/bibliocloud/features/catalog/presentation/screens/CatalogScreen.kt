@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.navigation.NavController
 import com.develazquez.bibliocloud.core.ui.Screen
@@ -42,6 +43,15 @@ fun CatalogScreen(
                     }
                     IconButton(onClick = { navController.navigate(Screen.CapturePhoto.route) }) {
                         Icon(Icons.Default.PhotoCamera, contentDescription = "Capturar portada")
+                    }
+                    IconButton(onClick = { 
+                        viewModel.logout {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    }) {
+                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Cerrar sesión")
                     }
                 }
             )

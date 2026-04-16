@@ -126,7 +126,9 @@ fun BiblioCloudApp(
         composable(Screen.AdminDashboard.route) {
             AdminDashboardScreen(
                 onNavigateBack = {
-                    navController.popBackStack()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }

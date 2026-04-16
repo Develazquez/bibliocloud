@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +35,16 @@ fun AdminDashboardScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Admin Dashboard") }
+                title = { Text("Admin Dashboard") },
+                actions = {
+                    IconButton(onClick = { 
+                        viewModel.logout {
+                            onNavigateBack() // Opcional: Esto asume que onNavigateBack vuelve a LoginScreen. Si no, actualizar en Navigation.
+                        }
+                    }) {
+                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Cerrar sesión")
+                    }
+                }
             )
         }
     ) { paddingValues ->
