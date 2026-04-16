@@ -23,10 +23,13 @@ fun RecursoEntity.toDomain(): Recurso {
             "DISPONIBLE" -> EstadoRecurso.DISPONIBLE
             "PRESTADO" -> EstadoRecurso.PRESTADO
             "EN_MANTENIMIENTO" -> EstadoRecurso.EN_MANTENIMIENTO
+            "NO_DISPONIBLE" -> EstadoRecurso.NO_DISPONIBLE
             else -> EstadoRecurso.DISPONIBLE
         },
         descripcion = descripcion,
-        audioUrl = audioUrl
+        audioUrl = audioUrl,
+        autor = autor,
+        creadoPor = creadoPor
     )
 }
 
@@ -38,7 +41,9 @@ fun Recurso.toEntity(): RecursoEntity {
         imagenUrl = imagenUrl,
         estado = estado.name,
         descripcion = descripcion,
-        audioUrl = audioUrl
+        audioUrl = audioUrl,
+        autor = autor,
+        creadoPor = creadoPor
     )
 }
 
@@ -55,6 +60,7 @@ fun PrestamoEntity.toDomain(): Prestamo {
             "ACTIVO" -> EstadoPrestamo.ACTIVO
             "DEVUELTO" -> EstadoPrestamo.DEVUELTO
             "ATRASADO" -> EstadoPrestamo.ATRASADO
+            "VENCIDO" -> EstadoPrestamo.VENCIDO
             else -> EstadoPrestamo.ACTIVO
         }
     )

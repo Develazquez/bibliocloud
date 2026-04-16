@@ -6,10 +6,16 @@ data class Usuario(
     val nombre: String,
     val email: String,
     val estado: EstadoUsuario,
-    val cantidadPrestamosActuales: Int
+    val cantidadPrestamosActuales: Int,
+    val rol: RolUsuario = RolUsuario.USUARIO
 )
 
 enum class EstadoUsuario {
     ACTIVO,
-    DEUDOR
+    INACTIVO
+}
+
+enum class RolUsuario {
+    USUARIO,
+    ADMIN
 }

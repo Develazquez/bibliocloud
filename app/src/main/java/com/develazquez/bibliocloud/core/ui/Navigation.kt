@@ -15,6 +15,7 @@ import com.develazquez.bibliocloud.features.catalog.presentation.screens.Confirm
 import com.develazquez.bibliocloud.features.loans.presentation.screens.MyLoansScreen
 import com.develazquez.bibliocloud.features.profile.presentation.screens.ProfileScreen
 import com.develazquez.bibliocloud.features.camera.presentation.screens.CapturePhotoScreen
+import com.develazquez.bibliocloud.features.admin.presentation.screens.AdminDashboardScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -32,6 +33,7 @@ sealed class Screen(val route: String) {
     }
     object MyLoans : Screen("my_loans")
     object CapturePhoto : Screen("capture_photo")
+    object AdminDashboard : Screen("admin_dashboard")
 }
 
 @Composable
@@ -119,6 +121,14 @@ fun BiblioCloudApp(
 
         composable(Screen.CapturePhoto.route) {
             CapturePhotoScreen(navController = navController)
+        }
+
+        composable(Screen.AdminDashboard.route) {
+            AdminDashboardScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

@@ -7,7 +7,9 @@ data class Recurso(
     val imagenUrl: String?,
     val estado: EstadoRecurso,
     val descripcion: String?,
-    val audioUrl: String? = null
+    val audioUrl: String? = null,
+    val autor: String? = null,
+    val creadoPor: Int? = null
 )
 
 enum class CategoriaRecurso {
@@ -20,5 +22,6 @@ enum class CategoriaRecurso {
 enum class EstadoRecurso {
     DISPONIBLE,
     PRESTADO,
-    EN_MANTENIMIENTO
+    EN_MANTENIMIENTO,
+    NO_DISPONIBLE
 }

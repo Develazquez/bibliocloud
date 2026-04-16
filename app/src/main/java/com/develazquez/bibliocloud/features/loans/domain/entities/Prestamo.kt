@@ -1,4 +1,4 @@
-﻿package com.develazquez.bibliocloud.features.loans.domain.entities
+package com.develazquez.bibliocloud.features.loans.domain.entities
 
 import java.util.Date
 import com.develazquez.bibliocloud.features.catalog.domain.entities.Recurso
@@ -19,5 +19,6 @@ data class Prestamo(
 enum class EstadoPrestamo {
     ACTIVO,
     DEVUELTO,
-    ATRASADO
+    ATRASADO,
+    VENCIDO
 }

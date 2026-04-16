@@ -11,5 +11,7 @@ data class RecursoEntity(
     val imagenUrl: String?,
     val estado: String,
     val descripcion: String?,
-    val audioUrl: String? = null
+    val audioUrl: String? = null,
+    val autor: String? = null,
+    val creadoPor: Int? = null
 )
