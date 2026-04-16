@@ -7,7 +7,8 @@ data class UsuarioDto(
     @SerializedName("nombre") val nombre: String?,
     @SerializedName("email") val email: String?,
     @SerializedName("estado") val estado: String?,
-    @SerializedName("cantidadPrestamosActuales") val cantidadPrestamosActuales: Int?
+    @SerializedName("cantidadPrestamosActuales") val cantidadPrestamosActuales: Int?,
+    @SerializedName("rol", alternate = ["Rol", "role", "Role", "ROLE"]) val rol: String?
 )
 
 data class RecursoDto(
@@ -17,7 +18,9 @@ data class RecursoDto(
     @SerializedName("imagen_url") val imagenUrl: String?,
     @SerializedName("estado") val estado: String?,
     @SerializedName("descripcion") val descripcion: String?,
-    @SerializedName("audio_url") val audioUrl: String?
+    @SerializedName("audio_url") val audioUrl: String?,
+    @SerializedName("autor") val autor: String?,
+    @SerializedName("creado_por") val creadoPor: Int?
 )
 
 data class PrestamoDto(

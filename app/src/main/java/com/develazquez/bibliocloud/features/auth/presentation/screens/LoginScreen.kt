@@ -1,4 +1,4 @@
-﻿package com.develazquez.bibliocloud.features.auth.presentation.screens
+package com.develazquez.bibliocloud.features.auth.presentation.screens
 
 import androidx.compose.runtime.collectAsState
 import com.develazquez.bibliocloud.core.ui.Screen
@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.develazquez.bibliocloud.core.ui.state.AuthState
 import com.develazquez.bibliocloud.features.auth.presentation.viewmodels.LoginViewModel
+import com.develazquez.bibliocloud.features.auth.domain.entities.RolUsuario
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +29,13 @@ fun LoginScreen(
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Success -> {
-                navController.navigate(Screen.Catalog.route) {
+                val successState = authState as AuthState.Success
+                val destination = if (successState.usuario.rol == RolUsuario.ADMIN) {
+                    Screen.AdminDashboard.route
+                } else {
+                    Screen.Catalog.route
+                }
+                navController.navigate(destination) {
                     popUpTo(Screen.Login.route) { inclusive = true }
                 }
                 viewModel.resetState()

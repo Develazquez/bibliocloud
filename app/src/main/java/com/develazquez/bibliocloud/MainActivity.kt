@@ -17,6 +17,12 @@ import androidx.core.content.ContextCompat
 import com.develazquez.bibliocloud.core.ui.BiblioCloudApp
 import com.develazquez.bibliocloud.core.ui.theme.BiblioCloudTheme
 import com.develazquez.bibliocloud.features.auth.domain.repositories.AuthRepository
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import com.develazquez.bibliocloud.core.workers.LoanExpiryWorker
+import com.develazquez.bibliocloud.core.workers.AdminAlertWorker
+import java.util.concurrent.TimeUnit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +69,8 @@ class MainActivity : ComponentActivity() {
                 authRepository.registerFcmToken(token ?: "")
             }
         }
+
+        scheduleWorkers()
         
         val navigateTo = intent?.getStringExtra("navigate_to")
         val bookId = intent?.getStringExtra("bookId")
@@ -80,5 +88,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun scheduleWorkers() {
+        val loanExpiryRequest = PeriodicWorkRequestBuilder<LoanExpiryWorker>(6, TimeUnit.HOURS).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "LoanExpiryWorker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            loanExpiryRequest
+        )
+
+        val adminAlertRequest = PeriodicWorkRequestBuilder<AdminAlertWorker>(6, TimeUnit.HOURS).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "AdminAlertWorker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            adminAlertRequest
+        )
     }
 }

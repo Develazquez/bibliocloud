@@ -39,11 +39,16 @@ class AuthRepositoryImpl @Inject constructor(
                 tokenManager.saveToken(loginResponse.token)
                 tokenManager.saveUserId(loginResponse.usuario.id)
 
+                val currentUserResult = getCurrentUser()
+                val finalUser = currentUserResult.getOrNull() ?: loginResponse.usuario
+
+                tokenManager.saveUserRole(finalUser.rol.name)
+
                 tokenManager.getFcmToken()?.let { fcmToken ->
                     registerFcmToken(fcmToken)
                 }
 
-                Result.success(loginResponse)
+                Result.success(LoginResponse(loginResponse.token, finalUser))
             } else {
                 Result.failure(Exception("Credenciales incorrectas"))
             }
@@ -74,6 +79,7 @@ class AuthRepositoryImpl @Inject constructor(
                 
                 tokenManager.saveToken(loginResponse.token)
                 tokenManager.saveUserId(loginResponse.usuario.id)
+                tokenManager.saveUserRole(loginResponse.usuario.rol.name)
 
                 tokenManager.getFcmToken()?.let { fcmToken ->
                     registerFcmToken(fcmToken)
@@ -127,7 +133,8 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    // NUEVO: Implementación para borrar cuenta en el servidor Go y limpiar datos locales
+
+    //limpiar datos locales
     override suspend fun deleteAccount(): Result<Unit> {
         return try {
             val token = tokenManager.getToken()

@@ -9,6 +9,7 @@ class TokenManager @Inject constructor(
     companion object {
         private const val KEY_TOKEN = "bibliocloud_auth_token"
         private const val KEY_USER_ID = "bibliocloud_user_id"
+        private const val KEY_USER_ROLE = "bibliocloud_user_role"
         private const val KEY_FCM_TOKEN = "bibliocloud_fcm_token"
     }
 
@@ -28,6 +29,14 @@ class TokenManager @Inject constructor(
         return sharedPreferences.getString(KEY_USER_ID, null)
     }
 
+    fun saveUserRole(role: String) {
+        sharedPreferences.edit().putString(KEY_USER_ROLE, role).apply()
+    }
+
+    fun getUserRole(): String? {
+        return sharedPreferences.getString(KEY_USER_ROLE, null)
+    }
+
     fun saveFcmToken(token: String) {
         sharedPreferences.edit().putString(KEY_FCM_TOKEN, token).apply()
     }
@@ -40,6 +49,7 @@ class TokenManager @Inject constructor(
         sharedPreferences.edit()
             .remove(KEY_TOKEN)
             .remove(KEY_USER_ID)
+            .remove(KEY_USER_ROLE)
             .remove(KEY_FCM_TOKEN)
             .apply()
     }

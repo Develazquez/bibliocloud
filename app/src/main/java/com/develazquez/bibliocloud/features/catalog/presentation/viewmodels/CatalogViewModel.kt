@@ -22,6 +22,7 @@ data class CatalogUiState(
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
     private val getAvailableBooksUseCase: GetAvailableBooksUseCase,
+    private val logoutUseCase: com.develazquez.bibliocloud.features.auth.domain.usescases.LogoutUseCase,
     private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
@@ -42,6 +43,15 @@ class CatalogViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = false, books = books) }
             }.onFailure { exception ->
                 _uiState.update { it.copy(isLoading = false, error = exception.message ?: "Error desconocido") }
+            }
+        }
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            val result = logoutUseCase()
+            if (result.isSuccess) {
+                onSuccess()
             }
         }
     }

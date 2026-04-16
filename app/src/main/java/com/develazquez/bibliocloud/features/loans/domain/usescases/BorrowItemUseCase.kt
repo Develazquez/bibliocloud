@@ -1,4 +1,4 @@
-﻿package com.develazquez.bibliocloud.features.loans.domain.usescases
+package com.develazquez.bibliocloud.features.loans.domain.usescases
 
 import com.develazquez.bibliocloud.features.catalog.domain.entities.EstadoRecurso
 import com.develazquez.bibliocloud.features.auth.domain.entities.EstadoUsuario
@@ -26,8 +26,8 @@ class BorrowItemUseCase @Inject constructor(
         }
 
         // Validar estado del usuario
-        if (usuario.estado == EstadoUsuario.DEUDOR) {
-            return Result.failure(Exception("Usuario en estado deudor. Debe devolver préstamos atrasados"))
+        if (usuario.estado == EstadoUsuario.INACTIVO) {
+            return Result.failure(Exception("Usuario en estado inactivo. No puede realizar préstamos"))
         }
 
         // Validar cantidad de préstamos

@@ -45,10 +45,14 @@ fun UsuarioDto.toDomain(): Usuario {
         email = this.email ?: "",
         estado = when ((this.estado ?: "").uppercase()) {
             "ACTIVO" -> EstadoUsuario.ACTIVO
-            "DEUDOR" -> EstadoUsuario.DEUDOR
+            "INACTIVO" -> EstadoUsuario.INACTIVO
             else -> EstadoUsuario.ACTIVO
         },
-        cantidadPrestamosActuales = this.cantidadPrestamosActuales ?: 0
+        cantidadPrestamosActuales = this.cantidadPrestamosActuales ?: 0,
+        rol = when ((this.rol ?: "").uppercase()) {
+            "ADMIN" -> RolUsuario.ADMIN
+            else -> RolUsuario.USUARIO
+        }
     )
 }
 
@@ -67,10 +71,13 @@ fun RecursoDto.toDomain(): Recurso {
             "DISPONIBLE" -> EstadoRecurso.DISPONIBLE
             "PRESTADO" -> EstadoRecurso.PRESTADO
             "EN_MANTENIMIENTO" -> EstadoRecurso.EN_MANTENIMIENTO
+            "NO_DISPONIBLE" -> EstadoRecurso.NO_DISPONIBLE
             else -> EstadoRecurso.DISPONIBLE
         },
         descripcion = this.descripcion,
-        audioUrl = this.audioUrl
+        audioUrl = this.audioUrl,
+        autor = this.autor,
+        creadoPor = this.creadoPor
     )
 }
 
@@ -86,6 +93,7 @@ fun PrestamoDto.toDomain(): Prestamo {
             "ACTIVO" -> EstadoPrestamo.ACTIVO
             "DEVUELTO" -> EstadoPrestamo.DEVUELTO
             "ATRASADO" -> EstadoPrestamo.ATRASADO
+            "VENCIDO" -> EstadoPrestamo.VENCIDO
             else -> EstadoPrestamo.ACTIVO
         },
         recurso = this.recurso?.toDomain(),
