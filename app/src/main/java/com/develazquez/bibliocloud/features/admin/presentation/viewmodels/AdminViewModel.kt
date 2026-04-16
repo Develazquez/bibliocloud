@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.develazquez.bibliocloud.features.admin.domain.repositories.AdminRepository
 import com.develazquez.bibliocloud.features.auth.domain.entities.Usuario
 import com.develazquez.bibliocloud.features.loans.domain.entities.Prestamo
+import com.develazquez.bibliocloud.features.catalog.domain.repositories.RecursoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +22,8 @@ sealed class AdminUiState {
 @HiltViewModel
 class AdminViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
-    private val logoutUseCase: com.develazquez.bibliocloud.features.auth.domain.usescases.LogoutUseCase
+    private val logoutUseCase: com.develazquez.bibliocloud.features.auth.domain.usescases.LogoutUseCase,
+    private val recursoRepository: RecursoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AdminUiState>(AdminUiState.Loading)
@@ -36,11 +38,23 @@ class AdminViewModel @Inject constructor(
             _uiState.value = AdminUiState.Loading
             val usersResult = adminRepository.getAllUsersForAdmin()
             val loansResult = adminRepository.getAllLoansForAdmin()
+            val resourcesResult = recursoRepository.getRecursos()
 
             if (usersResult.isSuccess && loansResult.isSuccess) {
+                val users = usersResult.getOrNull() ?: emptyList()
+                var loans = loansResult.getOrNull() ?: emptyList()
+                val resources = resourcesResult.getOrNull() ?: emptyList()
+
+                loans = loans.map { loan ->
+                    loan.copy(
+                        usuario = users.find { it.id == loan.usuarioId },
+                        recurso = resources.find { it.id == loan.recursoId }
+                    )
+                }
+
                 _uiState.value = AdminUiState.Success(
-                    users = usersResult.getOrNull() ?: emptyList(),
-                    loans = loansResult.getOrNull() ?: emptyList()
+                    users = users,
+                    loans = loans
                 )
             } else {
                 val errorMsg = usersResult.exceptionOrNull()?.message ?: loansResult.exceptionOrNull()?.message ?: "Error desconocido"

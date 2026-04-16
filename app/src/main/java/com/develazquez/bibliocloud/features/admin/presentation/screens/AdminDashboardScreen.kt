@@ -151,6 +151,19 @@ fun LoansList(
             Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(text = "Préstamo: ${loan.id}", fontWeight = FontWeight.Bold)
+                    
+                    if (loan.usuario != null) {
+                        Text(text = "Usuario: ${loan.usuario.nombre} (${loan.usuario.email})")
+                    } else {
+                        Text(text = "Usuario ID: ${loan.usuarioId}")
+                    }
+                    
+                    if (loan.recurso != null) {
+                        Text(text = "Recurso: ${loan.recurso.titulo}")
+                    } else {
+                        Text(text = "Recurso ID: ${loan.recursoId}")
+                    }
+                    
                     Text(text = "Estado: ${loan.estado.name}")
                     Text(text = "Vencimiento: ${dateFormat.format(loan.fechaFinPrevista)}")
                     Spacer(modifier = Modifier.height(8.dp))
